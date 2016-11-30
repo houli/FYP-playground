@@ -4,18 +4,19 @@ import ProcessLib
 
 %default total
 
-data ListStuff elem  = Cons elem
-                     | Index Nat
-
-ListType : ListStuff elem -> Type
-ListType (Cons _) = ()
-ListType (Index _) = Maybe elem
-
-typeEq : (elem : Type) -> (elem1 : Type) -> {auto ok : elem = elem1} -> elem = elem1
-typeEq {ok} _ _ = ok
+thingsEq : (x : a) -> (y : b) -> {auto ok : x = y} -> x = y
+thingsEq {ok} _ _ = ok
 
 typeOf : a -> Type
 typeOf {a} _ = a
+
+data ListStuff : Type -> Type where
+  Cons : elem1 -> ListStuff elem1
+  Index : Nat -> ListStuff elem1
+
+ListType : ListStuff elem1 -> Type
+ListType (Cons _) = ()
+ListType {elem1} (Index _) = Maybe elem1
 
 listService : (list : List elem) -> Service ListType ()
 listService {elem} list = do
@@ -23,9 +24,9 @@ listService {elem} list = do
     Cons _ => Pure ()
     Index idx => Pure (index' idx list))
   newList <- case msg of
-    Just (Cons val) => Pure (val :: list)
+    Just (Cons {elem1} val) => Pure (val :: list)
     _ => Pure list
-  Loop $ listService newList
+  Loop $ listService list
 
 procMain : Client ()
 procMain = do
