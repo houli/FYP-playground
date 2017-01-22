@@ -30,7 +30,8 @@ listService {elem} list = do
 
 procMain : Client ()
 procMain = do
-  serv <- Spawn $ listService (the (List Nat) [])
+  Just serv <- Spawn $ listService (the (List Nat) [])
+       | Nothing => Action (putStrLn "Spawn failed")
   Request serv (Cons 4)
   Request serv (Cons 0)
   Just val <- Request serv (Index 0)
