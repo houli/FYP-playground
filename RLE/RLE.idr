@@ -26,5 +26,14 @@ compress xs with (rle xs)
            strCons c (compress xs1)
 
 export
+-- intermediate : {auto p : LTE m n} -> Vect n Char -> (m : Nat ** Vect m (Pair Nat Char))
+intermediate : Vect n Char -> (m : Nat ** Vect m (Pair Nat Char))
+intermediate xs with (rle xs)
+  intermediate [] | REnd = (_ ** [])
+  intermediate (c :: (replicate n c ++ ys)) | (RChar n c rs)
+    = let (_ ** zs) = intermediate ys
+        in (_ ** (MkPair (S n) c) :: zs)
+
+export
 compressString : String -> String
 compressString xs = compress (fromList (unpack xs))

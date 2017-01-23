@@ -1,6 +1,8 @@
 module Main
 
+import Data.Vect
+
 import RLE
 
 main : IO ()
-main = putStrLn (compressString "11111111111foooobaaaarbaaaz")
+main = putStrLn $ show $ intermediate $ fromList $ unpack "11111111111foooobaaaarbaaaz"
