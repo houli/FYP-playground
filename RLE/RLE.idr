@@ -26,13 +26,13 @@ compress xs with (rle xs)
            strCons c (compress xs1)
 
 export
--- intermediate : {auto p : LTE m n} -> Vect n Char -> (m : Nat ** Vect m (Pair Nat Char))
-intermediate : Vect n Char -> (m : Nat ** Vect m (Pair Nat Char))
+intermediate : {auto p : LTE m (S n)} -> Vect (S n) Char -> (m : Nat ** Vect (S m) (Nat, Char))
 intermediate xs with (rle xs)
-  intermediate [] | REnd = (_ ** [])
-  intermediate (c :: (replicate n c ++ ys)) | (RChar n c rs)
-    = let (_ ** zs) = intermediate ys
-        in (_ ** (MkPair (S n) c) :: zs)
+  intermediate (_ :: _) | REnd impossible
+  intermediate (c :: (replicate n c ++ [])) | (RChar n c rs) = (_ ** [(S n, c)])
+  intermediate (c :: (replicate n c ++ (z :: zs))) | (RChar n c rs)
+    = let (_ ** ws) = intermediate (z :: zs)
+        in (_ ** (S n, c) :: ws)
 
 export
 compressString : String -> String
