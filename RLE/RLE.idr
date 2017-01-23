@@ -1,5 +1,6 @@
 module RLE
 
+import Data.Bits
 import Data.Vect
 
 data RLE : Vect n Char -> Type where
@@ -33,6 +34,11 @@ intermediate xs with (rle xs)
   intermediate (c :: (replicate n c ++ (z :: zs))) | (RChar n c rs)
     = let (_ ** ws) = intermediate (z :: zs)
         in (_ ** (S n, c) :: ws)
+
+export
+compressedBits : (n : Nat ** Vect (S n) (Nat, Char)) -> List (Bits 8)
+compressedBits (Z ** ((n, c) :: [])) = [intToBits (cast (ord c))]
+compressedBits ((S x) ** ((n, c) :: xs)) = intToBits (cast (ord c)) :: compressedBits (x ** xs)
 
 export
 compressString : String -> String
