@@ -1,0 +1,9 @@
+package assignment
+
+-- assignment
+-- by Eoin Houlihan
+
+opts = "-p contrib"
+sourcedir = src
+main = Assignment
+modules = Assignment, Hungarian
