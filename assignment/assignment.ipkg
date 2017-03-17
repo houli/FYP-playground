@@ -6,4 +6,4 @@ package assignment
 opts = "-p contrib"
 sourcedir = src
 main = Assignment
-modules = Assignment, Hungarian
+modules = Assignment, HungarianList, HungarianMatrix, HungarianMatrixProof
