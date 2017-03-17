@@ -8,9 +8,10 @@ columns = transpose
 
 listMin' : Ord a => a -> List a -> a
 listMin' x [] = x
-listMin' x (y :: ys) = case compare x y of
-                         GT => listMin' y ys
-                         _  => listMin' x ys
+listMin' x (y :: ys) with (compare x y)
+  listMin' x (y :: ys) | GT = listMin' y ys
+  listMin' x (y :: ys) | EQ = listMin' y ys
+  listMin' x (y :: ys) | LT = listMin' x ys
 
 partial
 listMin : Ord a => List a -> a
@@ -20,8 +21,7 @@ partial
 subSmallest : List (List Int) -> List (List Int)
 subSmallest [] = []
 subSmallest ([] :: xs) = [] :: subSmallest xs
-subSmallest (x :: xs) = let sub = listMin x in
-  map (flip (-) $ sub) x :: subSmallest xs
+subSmallest (x :: xs) = map (flip (-) $ (listMin x)) x :: subSmallest xs
 
 partial
 step1 : List (List Int) -> List (List Int)
