@@ -63,15 +63,36 @@ doSubElem0 (x :: xs) (There later) = There (doSubElem0' x later)
 subSmallest' : Vect (S n) Int -> Vect (S n) Int
 subSmallest' xs = doSub xs (vectMin xs)
 
+||| Given a proof procedure for an element of a vector and a vector, create a
+||| vector (All) of proofs for each element of the vector
+proofMap : {P : a -> Type} -> ((x : a) -> P x) -> (xs : Vect n a) -> All P xs
+proofMap _ [] = []
+proofMap f (x :: xs) = f x :: proofMap f xs
+
+||| Proving with the `Functor` interface `map` was too opaque?
+||| Had to write my own version of `map` for `Vect`
+myMap : (a -> b) -> Vect n a -> Vect n b
+myMap _ [] = []
+myMap f (x :: xs) = f x :: myMap f xs
+
 subSmallest : HungarianMatrix (S n) -> HungarianMatrix (S n)
-subSmallest xs = map subSmallest' xs
+subSmallest xs = myMap subSmallest' xs
 
 subSmallest'Elem0 : (xs : Vect (S n) Int) -> Elem 0 (subSmallest' xs)
 subSmallest'Elem0 xs = doSubElem0 xs (vectMinElem xs)
 
+||| Subtracting the minimum from all rows guarantees there is a `0` in any row
+subSmallestAnyElem0 : (xs : HungarianMatrix (S n)) -> Any (Elem 0) (subSmallest xs)
+subSmallestAnyElem0 (x :: xs) = Here (subSmallest'Elem0 x)
+
+subSmallestAllElem0' : All (\x => Elem (fromInteger 0) (subSmallest' x)) xs -> All (Elem 0) (myMap subSmallest' xs)
+subSmallestAllElem0' [] = []
+subSmallestAllElem0' (prf :: prfs) = prf :: subSmallestAllElem0' prfs
+
 ||| Subtracting the minimum from all rows guarantees there is a `0` in all rows
 subSmallestAllElem0 : (xs : HungarianMatrix (S n)) -> All (Elem 0) (subSmallest xs)
-subSmallestAllElem0 xs = ?hole
+subSmallestAllElem0 xs = let prfs = proofMap {P = \z => Elem 0 (subSmallest' z)} subSmallest'Elem0 xs
+                         in subSmallestAllElem0' prfs
 
 step1 : HungarianMatrix (S n) -> HungarianMatrix (S n)
 step1 xs = subSmallest xs
