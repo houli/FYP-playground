@@ -85,17 +85,25 @@ subSmallest'Elem0 xs = doSubElem0 xs (vectMinElem xs)
 subSmallestAnyElem0 : (xs : HungarianMatrix (S n)) -> Any (Elem 0) (subSmallest xs)
 subSmallestAnyElem0 (x :: xs) = Here (subSmallest'Elem0 x)
 
-subSmallestAllElem0' : All (\x => Elem (fromInteger 0) (subSmallest' x)) xs -> All (Elem 0) (myMap subSmallest' xs)
+subSmallestAllElem0' : All (\x => Elem 0 (subSmallest' x)) xs -> All (Elem 0) (myMap subSmallest' xs)
 subSmallestAllElem0' [] = []
 subSmallestAllElem0' (prf :: prfs) = prf :: subSmallestAllElem0' prfs
 
 ||| Subtracting the minimum from all rows guarantees there is a `0` in all rows
 subSmallestAllElem0 : (xs : HungarianMatrix (S n)) -> All (Elem 0) (subSmallest xs)
-subSmallestAllElem0 xs = let prfs = proofMap {P = \z => Elem 0 (subSmallest' z)} subSmallest'Elem0 xs
-                         in subSmallestAllElem0' prfs
+subSmallestAllElem0 xs = let prfs = proofMap {P = \z => Elem 0 (subSmallest' z)} subSmallest'Elem0 xs in
+                         subSmallestAllElem0' prfs
 
-step1 : HungarianMatrix (S n) -> HungarianMatrix (S n)
-step1 xs = subSmallest xs
+||| Subtracting the minimum from all columns guarantees there is a `0` in all columns
+subSmallestAllElem0Columns : (xs : HungarianMatrix (S n)) -> All (Elem 0) (subSmallest (columns xs))
+subSmallestAllElem0Columns xs = subSmallestAllElem0 (columns xs)
 
-step2 : HungarianMatrix (S n) -> HungarianMatrix (S n)
-step2 xs = transpose $ subSmallest $ columns xs
+step1 : HungarianMatrix (S n) -> (ys : HungarianMatrix (S n) ** All (Elem 0) ys)
+step1 xs = (subSmallest xs ** subSmallestAllElem0 xs)
+
+step2 : (xs : HungarianMatrix (S n) ** All (Elem 0) xs) -> (ys : HungarianMatrix (S n) ** All (Elem 0) ys)
+step2 (xs ** _) = let ys = subSmallest $ columns xs in
+                  (ys ** subSmallestAllElem0Columns xs)
+
+hungarianMethod : HungarianMatrix (S n) -> HungarianMatrix (S n)
+hungarianMethod xs = transpose (fst (step2 (step1 xs)))

@@ -34,3 +34,6 @@ step1 xs = subSmallest xs
 
 step2 : HungarianMatrix (S n) -> HungarianMatrix (S n)
 step2 xs = transpose $ subSmallest $ columns xs
+
+hungarianMethod : HungarianMatrix (S n) -> HungarianMatrix (S n)
+hungarianMethod xs = step2 (step1 xs)

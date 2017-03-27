@@ -20,7 +20,6 @@ listMin (x :: xs) = listMin' x xs
 partial
 subSmallest : List (List Int) -> List (List Int)
 subSmallest [] = []
-subSmallest ([] :: xs) = [] :: subSmallest xs
 subSmallest (x :: xs) = map (flip (-) $ (listMin x)) x :: subSmallest xs
 
 partial
@@ -30,3 +29,7 @@ step1 xs = subSmallest xs
 partial
 step2 : List (List Int) -> List (List Int)
 step2 xs = transpose $ subSmallest $ columns xs
+
+partial
+hungarianMethod : List (List Int) -> List (List Int)
+hungarianMethod xs = step2 (step1 xs)
