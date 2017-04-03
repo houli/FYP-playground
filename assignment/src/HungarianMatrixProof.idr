@@ -4,8 +4,8 @@ import Data.Matrix
 import Data.Vect.Quantifiers
 
 %default total
-%access public export
 
+public export
 HungarianMatrix : (n : Nat) -> {auto p : n `GT` Z} -> Type
 HungarianMatrix Z {p = LTEZero} impossible
 HungarianMatrix Z {p = (LTESucc _)} impossible
@@ -105,5 +105,6 @@ step2 : (xs : HungarianMatrix (S n) ** All (Elem 0) xs) -> (ys : HungarianMatrix
 step2 (xs ** _) = let ys = subSmallest $ columns xs in
                   (ys ** subSmallestAllElem0Columns xs)
 
+export
 hungarianMethod : HungarianMatrix (S n) -> HungarianMatrix (S n)
 hungarianMethod xs = transpose (fst (step2 (step1 xs)))

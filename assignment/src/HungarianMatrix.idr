@@ -3,8 +3,8 @@ module HungarianMatrix
 import Data.Matrix
 
 %default total
-%access public export
 
+public export
 HungarianMatrix : (n : Nat) -> {auto p : n `GT` Z} -> Type
 HungarianMatrix Z {p = LTEZero} impossible
 HungarianMatrix Z {p = (LTESucc _)} impossible
@@ -35,5 +35,6 @@ step1 xs = subSmallest xs
 step2 : HungarianMatrix (S n) -> HungarianMatrix (S n)
 step2 xs = transpose $ subSmallest $ columns xs
 
+export
 hungarianMethod : HungarianMatrix (S n) -> HungarianMatrix (S n)
 hungarianMethod xs = step2 (step1 xs)

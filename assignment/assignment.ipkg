@@ -1,9 +1,15 @@
 package assignment
 
--- assignment
--- by Eoin Houlihan
+-- Assignment problem executable
 
-opts = "-p contrib"
+author = "Eoin Houlihan"
+
+pkgs = contrib
 sourcedir = src
+modules = Assignment
+        , HungarianList
+        , HungarianMatrix
+        , HungarianMatrixProof
+
 main = Assignment
-modules = Assignment, HungarianList, HungarianMatrix, HungarianMatrixProof
+executable = assignment

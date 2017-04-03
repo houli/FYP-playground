@@ -1,7 +1,6 @@
 module HungarianList
 
 %default total
-%access public export
 
 columns : List (List a) -> List (List a)
 columns = transpose
@@ -31,5 +30,6 @@ step2 : List (List Int) -> List (List Int)
 step2 xs = transpose $ subSmallest $ columns xs
 
 partial
+export
 hungarianMethod : List (List Int) -> List (List Int)
 hungarianMethod xs = step2 (step1 xs)
