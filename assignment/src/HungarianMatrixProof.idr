@@ -69,14 +69,15 @@ proofMap : {P : a -> Type} -> ((x : a) -> P x) -> (xs : Vect n a) -> All P xs
 proofMap _ [] = []
 proofMap f (x :: xs) = f x :: proofMap f xs
 
-||| Proving with the `Functor` interface `map` was too opaque?
-||| Had to write my own version of `map` for `Vect`
-myMap : (a -> b) -> Vect n a -> Vect n b
-myMap _ [] = []
-myMap f (x :: xs) = f x :: myMap f xs
+-- No longer necessary, must have been bug fix in Idris 1.0
+-- ||| Proving with the `Functor` interface `map` was too opaque?
+-- ||| Had to write my own version of `map` for `Vect`
+-- myMap : (a -> b) -> Vect n a -> Vect n b
+-- myMap _ [] = []
+-- myMap f (x :: xs) = f x :: myMap f xs
 
 subSmallest : HungarianMatrix (S n) -> HungarianMatrix (S n)
-subSmallest xs = myMap subSmallest' xs
+subSmallest xs = map subSmallest' xs
 
 subSmallest'Elem0 : (xs : Vect (S n) Int) -> Elem 0 (subSmallest' xs)
 subSmallest'Elem0 xs = doSubElem0 xs (vectMinElem xs)
@@ -85,7 +86,7 @@ subSmallest'Elem0 xs = doSubElem0 xs (vectMinElem xs)
 subSmallestAnyElem0 : (xs : HungarianMatrix (S n)) -> Any (Elem 0) (subSmallest xs)
 subSmallestAnyElem0 (x :: xs) = Here (subSmallest'Elem0 x)
 
-subSmallestAllElem0' : All (\x => Elem 0 (subSmallest' x)) xs -> All (Elem 0) (myMap subSmallest' xs)
+subSmallestAllElem0' : All (\x => Elem 0 (subSmallest' x)) xs -> All (Elem 0) (map subSmallest' xs)
 subSmallestAllElem0' [] = []
 subSmallestAllElem0' (prf :: prfs) = prf :: subSmallestAllElem0' prfs
 
