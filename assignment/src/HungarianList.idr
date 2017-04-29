@@ -2,7 +2,15 @@ module HungarianList
 
 %default total
 
-columns : List (List a) -> List (List a)
+public export
+Matrix : Type -> Type
+Matrix a = List (List a)
+
+public export
+HungarianMatrix : Type
+HungarianMatrix = Matrix Int
+
+columns : Matrix a -> Matrix a
 columns = transpose
 
 listMin' : Ord a => a -> List a -> a
@@ -17,19 +25,19 @@ listMin : Ord a => List a -> a
 listMin (x :: xs) = listMin' x xs
 
 partial
-subSmallest : List (List Int) -> List (List Int)
+subSmallest : HungarianMatrix -> HungarianMatrix
 subSmallest [] = []
 subSmallest (x :: xs) = map (flip (-) $ (listMin x)) x :: subSmallest xs
 
 partial
-step1 : List (List Int) -> List (List Int)
+step1 : HungarianMatrix -> HungarianMatrix
 step1 xs = subSmallest xs
 
 partial
-step2 : List (List Int) -> List (List Int)
+step2 : HungarianMatrix -> HungarianMatrix
 step2 xs = transpose $ subSmallest $ columns xs
 
 partial
 export
-hungarianMethod : List (List Int) -> List (List Int)
+hungarianMethod : HungarianMatrix -> HungarianMatrix
 hungarianMethod xs = step2 (step1 xs)
