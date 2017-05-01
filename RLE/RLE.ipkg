@@ -1,0 +1,13 @@
+package RLE
+
+-- Run length encoding executable
+
+author = "Eoin Houlihan"
+
+pkgs = contrib
+sourcedir = src
+modules = Main
+        , RLE
+
+main = Main
+executable = rle

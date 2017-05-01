@@ -1,5 +1,9 @@
 module RLE
 
+-- Based on Idris example code
+-- Further implemented to provide an intermediate representation
+-- and to output RLE buffers to a compressed file
+
 import Data.Bits
 import Data.Vect
 
@@ -27,7 +31,7 @@ compress xs with (rle xs)
            strCons c (compress xs1)
 
 export
-intermediate : {auto p : LTE m (S n)} -> Vect (S n) Char -> (m : Nat ** Vect (S m) (Nat, Char))
+intermediate : {auto p : m `LTE` (S n)} -> Vect (S n) Char -> (m : Nat ** Vect (S m) (Nat, Char))
 intermediate xs with (rle xs)
   intermediate (_ :: _) | REnd impossible
   intermediate (c :: (replicate n c ++ [])) | (RChar n c rs) = (_ ** [(S n, c)])
@@ -37,8 +41,8 @@ intermediate xs with (rle xs)
 
 export
 compressedBits : (n : Nat ** Vect (S n) (Nat, Char)) -> List (Bits 8)
-compressedBits (Z ** ((n, c) :: [])) = [intToBits (cast (ord c))]
-compressedBits ((S x) ** ((n, c) :: xs)) = intToBits (cast (ord c)) :: compressedBits (x ** xs)
+compressedBits (Z ** ((n, c) :: [])) = [intToBits (cast n), intToBits (cast (ord c))]
+compressedBits ((S x) ** ((n, c) :: xs)) = intToBits (cast n) :: intToBits (cast (ord c)) :: compressedBits (x ** xs)
 
 export
 compressString : String -> String
