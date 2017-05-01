@@ -1,0 +1,22 @@
+* Assignment Problem
+This package contains three Idris implementations of the first two steps of the
+Hungarian algorithm
+
+** Compiling
+Compilation requires at least Idris 1.0 to be installed as well as a C
+toolchain.
+
+#+BEGIN_SRC bash
+$ idris --build assignment.ipkg
+#+END_SRC
+
+The output should be an executable named =assignment= in this directory
+
+** Running
+
+#+BEGIN_SRC bash
+$ ./assignment
+#+END_SRC
+
+Running the program will result in the three different implementations being run
+over the same test input, =[[250, 400, 350], [400, 600, 350], [200, 400, 250]]=

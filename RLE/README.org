@@ -1,0 +1,21 @@
+* Run-Length Encoding
+This is an Idris implementation of run-length encoding
+
+** Compiling
+Compilation requires at least Idris 1.0 to be installed as well as a C
+toolchain.
+
+#+BEGIN_SRC bash
+$ idris --build RLE.ipkg
+#+END_SRC
+
+The output should be an executable named =rle= in this directory
+
+** Running
+
+#+BEGIN_SRC bash
+$ ./rle
+#+END_SRC
+
+Running the program will result in the test string in =src/Main.idr= being
+compressed and output into =output.bin=.
