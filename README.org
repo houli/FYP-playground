@@ -1,0 +1,3 @@
+* FYP Code - Eoin Houlihan
+Individual documentation for each case study can be found in =README.org= in the
+=assignment= and =RLE= directories.
